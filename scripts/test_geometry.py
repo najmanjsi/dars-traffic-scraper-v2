@@ -3,8 +3,11 @@ import folium
 import numpy as np
 
 MAP_NAME = 'new_map.html'
+DATA_DIR = '../data/data/'
+SEGMENTS_FILE = DATA_DIR / 'segments.parquet'
+TRAFFIC_FILE = DATA_DIR / 'traffic' / '2026-04-17.parquet'
 
-df = pd.read_parquet("data/segments.parquet")
+df = pd.read_parquet(SEGMENTS_FILE)
 
 # center map (Ljubljana)
 m = folium.Map(location=[46.05, 14.5], zoom_start=13)
@@ -27,7 +30,7 @@ def normalize_line(line):
 
 
 # traffic congestion overlay
-traffic = pd.read_parquet("data/traffic/2026-04-21.parquet")
+traffic = pd.read_parquet(TRAFFIC_FILE)
 
 latest = traffic.sort_values("timestamp").groupby("segment_id").tail(1)
 

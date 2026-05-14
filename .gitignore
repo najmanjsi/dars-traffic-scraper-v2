@@ -1,2 +1,4 @@
 *.parquet
 cron.log
+.venv/
+!2026-05-01_wholeday.parquet

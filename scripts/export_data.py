@@ -7,7 +7,7 @@ import datetime
 import zoneinfo
 #from dateutil.parser import parse
 
-BASE = Path(__file__).parent
+BASE = Path(__file__).parent.parent
 
 #s = '2026-05-08 11:30:05,244'.split(',')[0]
 #dt = datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S')
@@ -22,8 +22,8 @@ else:
     yesterday = today - datetime.timedelta(days=1)
     day_file = today.strftime('%Y-%m-%d.parquet')
 
-SEGMENTS_FILE = BASE / 'data' / 'segments.parquet'
-TRAFFIC_FILE = BASE / 'data' / 'traffic' / day_file
+SEGMENTS_FILE = BASE / 'data' / 'data' / 'segments.parquet'
+TRAFFIC_FILE = BASE / 'data' / 'data' / 'traffic' / day_file
 
 OUTPUT_DIR = BASE / 'web' / 'exported'
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

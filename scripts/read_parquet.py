@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import datetime
 
-DATA_DIR = "../data"
+DATA_DIR = "../data/data"
 SEGMENTS_FILE = os.path.join(DATA_DIR, "segments.parquet")
 TRAFFIC_DIR = os.path.join(DATA_DIR, "traffic")
 TODAY_FILE = datetime.datetime.now().strftime('%Y-%m-%d.parquet')

@@ -12,10 +12,10 @@ import sys
 #print('script started')
 
 # ---------------- CONFIG ----------------
-DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1495732915756077117/jY_nI9kZDXdTQlDWgy-WAeQx11gUX5VyOgvTHrawPlol69AAv-ojvcCYwEmccFFA9hjT'
+DISCORD_WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL' # if you want to get discord messages on errors, you have to also uncomment 'send_discord' method calls
 BASE_URL = "https://gis.dars.si/data/tiles/fcd"
 TILES = [(11, 1106, 727), (11, 1106, 728)]
-DATA_DIR = "/root/scraper/data"
+DATA_DIR = "../data/data/"
 TRAFFIC_DIR = os.path.join(DATA_DIR, "traffic")
 RAW_DIR = os.path.join(DATA_DIR, "raw")
 LOGS_DIR = os.path.join(DATA_DIR, 'logs')
@@ -136,7 +136,7 @@ for z, x, y in TILES:
     except Exception as e:
         error = f'Error fetching tile {z}/{x}/{y}: {e}'
         logging.error(error)
-        send_discord(error)
+        #send_discord(error)
 
 
 # ---------------- SAVE SEGMENTS ----------------
@@ -162,7 +162,8 @@ if traffic_rows:
 
     traffic_df.to_parquet(day_file, index=False)
 else:
-    send_discord('No traffic data returned.')
+    pass
+    #send_discord('No traffic data returned.')
 
 
 logging.info(f'Saved {len(traffic_rows)} rows')

@@ -1,6 +1,6 @@
 # let's check if there's an error in the logs somewhere
 
-LOG_FILE_PATH = './data/logs/scraper.log'
+LOG_FILE_PATH = '../data/data/logs/scraper.log'
 USUAL_NUMBER_OF_ROWS = 13794
 CHECK_FROM_LINE = 14_000
 
