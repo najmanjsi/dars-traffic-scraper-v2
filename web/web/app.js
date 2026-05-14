@@ -29,6 +29,10 @@ let trafficFrames = [];
 let currentFrame = 0;
 let timer = null;
 
+// day selector
+const startDate = "2026-04-17";
+const endDate = "2026-05-14";
+
 // --------------------------------------------------
 // UI
 // --------------------------------------------------
@@ -44,6 +48,62 @@ function showLoading() {
 }
 function hideLoading() {
     loadingOverlay.style.display = 'none';
+}
+
+function generateDateRange(start, end) {
+
+    const dates = [];
+
+    let current = new Date(start);
+    const last = new Date(end);
+
+    while (current <= last) {
+
+        const yyyy = current.getFullYear();
+        const mm = String(current.getMonth() + 1).padStart(2, '0');
+        const dd = String(current.getDate()).padStart(2, '0');
+
+        dates.push(`${yyyy}-${mm}-${dd}`);
+
+        current.setDate(current.getDate() + 1);
+    }
+
+    return dates;
+}
+
+function generateDateRangeToToday(start) {
+
+    const dates = [];
+
+    let current = new Date(start);
+    const last = new Date(); // today
+
+    while (current <= last) {
+
+        const yyyy = current.getFullYear();
+        const mm = String(current.getMonth() + 1).padStart(2, '0');
+        const dd = String(current.getDate()).padStart(2, '0');
+
+        dates.push(`${yyyy}-${mm}-${dd}`);
+
+        current.setDate(current.getDate() + 1);
+    }
+
+    return dates;
+}
+
+const availableDays = generateDateRange(startDate, endDate);
+//console.log(availableDays)
+
+const daySelect = document.getElementById('daySelect');
+
+for (const day of availableDays) {
+    const option = document.createElement('option');
+
+    option.value = day;
+    option.textContent = day;
+
+    daySelect.appendChild(option);
 }
 
 
@@ -67,6 +127,8 @@ function getColor(c) {
 // --------------------------------------------------
 
 async function loadGeometry() {
+
+    hideLoading();
 
     geometry = await fetch('./exported/geometry.json')
         .then(r => r.json());
@@ -105,14 +167,14 @@ async function loadFrameList() {
 }
 */
 
-async function loadTrafficDay() {
+async function loadTrafficDay(selectedDay) {
 
     showLoading();
-    console.log('started loading')
-    loadingText.innerText = 'TVOJA MAMI'
+    //console.log('started loading')
+    //loadingText.innerText = 'TVOJA MAMI'
 
     const response = await fetch(
-        '/data/traffic/2026-05-11.parquet'
+        `/data/data/traffic/${selectedDay}.parquet`
     );
 
     // this threw an error: parquet expected AsyncBuffer
@@ -165,7 +227,7 @@ async function loadTrafficDay() {
     timeline.max = trafficFrames.length - 1;
 
     hideLoading();
-    console.log('finished loading')
+    //console.log('finished loading')
 }
 
 /*
@@ -275,6 +337,17 @@ timeline.oninput = async (e) => {
     renderFrame(currentFrame);
 };
 
+daySelect.onchange = async () => {
+
+    stop();
+
+    currentFrame = 0;
+
+    await loadTrafficDay(daySelect.value);
+
+    renderFrame(0);
+};
+
 // --------------------------------------------------
 // STARTUP
 // --------------------------------------------------
@@ -283,9 +356,9 @@ async function init() {
 
     await loadGeometry();
 
-    await loadTrafficDay();
+    //await loadTrafficDay();
 
-    renderFrame(0);
+    //renderFrame(0);
 }
 
 init();
