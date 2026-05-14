@@ -6,9 +6,9 @@ Pomembne skripte:
 - export_data - pripravi datoteke, potrebne za delovanje spletne aplikacije (Parquet datoteke pretvori v JSON datoteke po urah)
 
 
-Spletna aplikacija se nahaja v direktoriju web, omogoča animiran prikaz gostote prometa v Ljubljani za izbran datum (od 17.4.2026 naprej) z izbiro hitrosti predvajanja.
+Spletna aplikacija se nahaja v mapi web, omogoča animiran prikaz gostote prometa v Ljubljani za izbran datum (od 17.4.2026 naprej) z izbiro hitrosti predvajanja.
 
-IMPORTANT NOTE: Aplikacija seveda ne deluje brez prometnih datotek, ki pa jih tu ni (zaradi velikosti). V bližnji prihodnosti moram dodati še link do tega.
+IMPORTANT NOTE: Aplikacija seveda ne deluje brez prometnih datotek, ki pa jih tu ni (zaradi velikosti). V bližnji prihodnosti moram dodati še link do tega. Sta pa v mapi traffic/example/ ena Parquet datoteka za cel dan (1.5.2026) in pa ena CSV datoteka taistega dne, a le za enourni interval (od 8:00 do 9:00)
 
 Še en malo manj important note: trenutno je aplikacija narejena tako, da brskalnik prebere dnevno prometno Parquet datoteko, kar traja nekaj sekund. Branje te datoteke sem prestavil na brskalnik zaradi omejitve RAMa na serverju, kjer imam tudi scraper. Ker je zdaj aplikacija ločena od scraperja, si lahko privoščim, da datoteko preberem že prej. To moram še spremeniti.
 
