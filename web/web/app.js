@@ -6,7 +6,9 @@ import { parquetReadObjects } from 'https://cdn.jsdelivr.net/npm/hyparquet/+esm'
 // MAP
 // --------------------------------------------------
 
-const map = L.map('map').setView([46.05, 14.5], 12);
+const map = L.map('map', {
+    zoomControl: false
+}).setView([46.05, 14.5], 12);
 
 L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -15,6 +17,10 @@ L.tileLayer(
         attribution: '&copy; OpenStreetMap contributors'
     }
 ).addTo(map);
+
+L.control.zoom({
+    position: 'topright'
+}).addTo(map);
 
 // --------------------------------------------------
 // GLOBALS
@@ -214,10 +220,10 @@ async function loadTrafficDay(selectedDay) {
         .map(([timestamp, values]) => ({
             timestamp,
             values
-        }))
-        .sort((a, b) =>
-            a.timestamp.localeCompare(b.timestamp)
-        );
+        }));
+        //.sort((a, b) =>
+        //    a.timestamp.localeCompare(b.timestamp)
+        //);
 
     console.log(
         'Frames created:',
@@ -263,7 +269,16 @@ function renderFrame(frameIndex) {
 
     if (!frame) return;
 
-    timestampDiv.innerText = frame.timestamp;
+    const date = new Date(frame.timestamp);
+    timestampDiv.innerText = date.toLocaleDateString(
+        'sl-SI', {
+            weekday: 'short',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
 
     timeline.value = frameIndex;
 
@@ -356,9 +371,12 @@ async function init() {
 
     await loadGeometry();
 
-    //await loadTrafficDay();
+    const lastDay = availableDays[availableDays.length - 1];
+    daySelect.value = lastDay;
 
-    //renderFrame(0);
+    await loadTrafficDay(lastDay);
+
+    renderFrame(0);
 }
 
 init();
