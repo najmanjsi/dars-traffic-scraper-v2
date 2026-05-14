@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Vizualizacija gostote Ljubljanskega prometa</title>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="controls">
+            <button id="playBtn">Play</button>
+            <button id="pauseBtn">Pause</button>
+
+            <br><br>
+
+            Speed:
+            <select id="speedSelect">
+                <option value="1000">1x</option>
+                <option value="500" selected>2x</option>
+                <option value="250">4x</option>
+                <option value="100">10x</option>
+            </select>
+
+            <br><br>
+
+            <input type="range" id="timeline" min="0" max="0" value="0">
+
+            <br><br>
+
+            Day:
+            <select id="daySelect"></select>
+
+            <br><br>
+
+            <div id="timestamp">Timestamp</div>
+        </div>
+
+        <div id="map"></div>
+
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script type="module" src="app.js"></script>
+
+        <div id="loadingOverlay">
+            <div id="loadingText">
+                Loading traffic data...
+            </div>
+        </div>
+    </body>
+</html>

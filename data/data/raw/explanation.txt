@@ -1,0 +1,3 @@
+we don't save raw data since nothing is lost by converting it to a more useful and processed parquet file (see "../traffic/")
+if you want to get raw data for Ljubljana region, go to "https://gis.dars.si/data/tiles/fcd/11/1106/727.vector.pbf" (north half) and "https://gis.dars.si/data/tiles/fcd/11/1106/728.vector.pbf" (south half)
+or, if you want the data for any location (only Slovenia and some neighbouring territories are covered), request "https://gis.dars.si/data/tiles/fcd/{z}/{x}/{y}.vector.pbf", where z, x and y are Web Mercator tile coordinates
