@@ -35,9 +35,36 @@ let trafficFrames = [];
 let currentFrame = 0;
 let timer = null;
 
+let isPlaying = false;
+
+let legendShown = false;
+let weatherShown = false;
+
 // day selector
 const startDate = "2026-04-17";
 const endDate = "2026-05-14";
+
+// weather data
+async function getWeatherData(date) {
+
+    const params = new URLSearchParams({
+        latitude: 46.05,
+        longitude: 14.51,
+        start_date: date,
+        end_date: date,
+        hourly: 'temperature_2m,precipitation,weathercode',
+        timezone: 'UTC'
+    });
+
+    const url = `https://archive-api.open-meteo.com/v1/archive?${params}`;
+
+    const response = await fetch(url);
+
+    return await response.json();
+}
+
+let weatherData = null; //await getWeatherData(endDate);
+
 
 // --------------------------------------------------
 // UI
@@ -54,6 +81,38 @@ function showLoading() {
 }
 function hideLoading() {
     loadingOverlay.style.display = 'none';
+}
+
+const legendBtn = document.getElementById('legendBtn');
+const legend = document.getElementById('legend');
+legend.style.display = 'none';
+
+// weather
+const weatherBtn = document.getElementById('weatherBtn');
+const weather = document.getElementById('weather');
+weather.style.display = 'none';
+
+//console.log(weatherData.hourly);
+
+function weatherIcon(code) {
+
+    if (code === 0) return '☀';
+
+    if ([1,2,3].includes(code)) return '🌤';
+
+    if ([51,53,55].includes(code)) return '🌦';
+
+    if ([61,63,65].includes(code)) return '🌧';
+
+    if ([71,73,75].includes(code)) return '❄';
+
+    return '☁';
+}
+
+function updateHourlyWeather(hourIndex) {
+    weather.innerText = `vreme: ${weatherIcon(weatherData.hourly.weathercode[hourIndex])}
+                        padavine: ${weatherData.hourly.precipitation[hourIndex]}mm
+                        temperatura: ${weatherData.hourly.temperature_2m[hourIndex]}°C`;
 }
 
 function generateDateRange(start, end) {
@@ -117,8 +176,13 @@ for (const day of availableDays) {
 // COLORS
 // --------------------------------------------------
 
-function getColor(c) {
+let useInterpolatedColors = false;
+const colorModeBtn = document.getElementById('colorModeBtn');
 
+
+function getCategoricalColor(c) {
+    //return '#391661'
+    
     if (c < 60) return '#008E30';
 
     if (c < 250) return '#F49E00';
@@ -127,6 +191,68 @@ function getColor(c) {
 
     return '#9E0F00';
 }
+
+function lerp(a, b, t) {
+    return a + (b - a) * t;
+}
+
+function lerpColor(c1, c2, t) {
+
+    const r = Math.round(lerp(c1[0], c2[0], t));
+    const g = Math.round(lerp(c1[1], c2[1], t));
+    const b = Math.round(lerp(c1[2], c2[2], t));
+
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
+function getInterpolatedColor(c) {
+
+    // 0–60
+    if (c < 60) {
+
+        const t = c / 60;
+
+        return lerpColor(
+            [0, 110, 40],   // darker green
+            [0, 142, 48],   // official green
+            t
+        );
+    }
+
+    // 60–250
+    if (c < 250) {
+
+        const t = (c - 60) / (250 - 60);
+
+        return lerpColor(
+            [255, 220, 120],  // pale orange-yellow
+            [244, 158, 0],    // official orange
+            t
+        );
+    }
+
+    // 250–500
+    if (c < 500) {
+
+        const t = (c - 250) / (500 - 250);
+
+        return lerpColor(
+            [255, 120, 120],  // lighter red
+            [226, 0, 26],     // official red
+            t
+        );
+    }
+
+    // 500+
+    const t = Math.min((c - 500) / 500, 1);
+
+    return lerpColor(
+        [158, 15, 0],   // official dark red
+        [90, 0, 0],     // deeper dark red
+        t
+    );
+}
+
 
 // --------------------------------------------------
 // LOAD GEOMETRY
@@ -232,6 +358,10 @@ async function loadTrafficDay(selectedDay) {
 
     timeline.max = trafficFrames.length - 1;
 
+    // weather
+    weatherData = await getWeatherData(selectedDay);
+    console.log(weatherData.hourly);
+
     hideLoading();
     //console.log('finished loading')
 }
@@ -288,11 +418,21 @@ function renderFrame(frameIndex) {
         const layer = segmentLayers[segmentId];
 
         if (!layer) continue;
-
+        
         layer.setStyle({
-            color: getColor(c)
+            color: useInterpolatedColors ? getInterpolatedColor(Number(c)) : getCategoricalColor(Number(c))
         });
     }
+
+    // weather
+    updateHourlyWeather(date.getUTCHours());
+}
+
+function redrawCurrentFrame() {
+
+    if (!frames.length) return;
+
+    renderFrame(currentFrame);
 }
 
 // --------------------------------------------------
@@ -330,11 +470,36 @@ function stop() {
 // UI EVENTS
 // --------------------------------------------------
 
-document.getElementById('playBtn')
-    .onclick = play;
+//document.getElementById('playBtn')
+//    .onclick = play;
 
-document.getElementById('pauseBtn')
-    .onclick = stop;
+//document.getElementById('pauseBtn')
+//    .onclick = stop;
+
+function togglePlayback() {
+    isPlaying = !isPlaying;
+
+    if (isPlaying) {
+        playBtn.innerText = '⏸ Stop';
+        play();
+    }
+    else {
+        playBtn.innerText = '▶ Start';
+        stop();
+    }
+}
+
+const playBtn = document.getElementById('playBtn');
+playBtn.addEventListener('click', () => {
+    togglePlayback();
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlayback();
+    }
+});
 
 speedSelect.onchange = () => {
 
@@ -345,7 +510,7 @@ speedSelect.onchange = () => {
 
 timeline.oninput = async (e) => {
 
-    stop();
+    //stop();
 
     currentFrame = parseInt(e.target.value);
 
@@ -355,13 +520,47 @@ timeline.oninput = async (e) => {
 daySelect.onchange = async () => {
 
     stop();
-
     currentFrame = 0;
+
+    //weatherData = getWeatherData(daySelect.value);
 
     await loadTrafficDay(daySelect.value);
 
     renderFrame(0);
 };
+
+colorModeBtn.addEventListener('click', () => {
+
+    useInterpolatedColors = !useInterpolatedColors;
+
+    if (useInterpolatedColors) {
+        colorModeBtn.innerText = 'Pobarvaj preprosto';
+    }
+    else {
+        colorModeBtn.innerText = 'Pobarvaj interpolirano';
+    }
+
+    renderFrame(currentFrame);
+    //redrawCurrentFrame();
+});
+
+
+function toggleLegend() {
+    legendShown = !legendShown;
+
+    legend.style.display = legendShown? 'inline-block' : 'none';
+}
+
+legendBtn.onclick = toggleLegend;
+
+// weather UI
+function toggleWeather() {
+    weatherShown = !weatherShown;
+
+    weather.style.display = weatherShown? 'inline-block' : 'none';
+}
+
+weatherBtn.onclick = toggleWeather;
 
 // --------------------------------------------------
 // STARTUP

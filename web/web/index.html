@@ -2,15 +2,17 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Vizualizacija gostote Ljubljanskega prometa</title>
+        <title>Vizualizacija gostote Ljubljanskega prometa (arhiv)</title>
+
+        <link rel="icon" type="image/x-icon" href="/images/car.png">
 
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
         <div id="controls">
-            <button id="playBtn">Start</button>
-            <button id="pauseBtn">Stop</button>
+            <button id="playBtn">▶ Start</button>
+            <!--<button id="pauseBtn">Stop</button>-->
 
             <br><br>
 
@@ -34,6 +36,85 @@
             <br><br>
 
             <div id="timestamp">Timestamp</div>
+
+            <br><br>
+
+            <button id="colorModeBtn">
+                Pobarvaj interpolirano
+            </button>
+            
+            <br><br>
+            
+
+            <button id="legendBtn">
+                Legenda
+            </button>
+            
+            <br>
+
+            <div id="legend">
+                <!--hr style="width: 50%;text-align: left;margin-left: 0;"-->
+
+                <div>
+                    <span style="color: #008E30">
+                        &#9632;
+                    </span>
+                    Miren promet
+                </div>
+
+                <div>
+                    <span style="color: #F49E00">
+                        &#9632;
+                    </span>
+                    Normalen promet
+                </div>
+
+                <div>
+                    <span style="color: #E2001A">
+                        &#9632;
+                    </span>
+                    Gost promet
+                </div>
+
+                <div>
+                    <span style="color: #9E0F00">
+                        &#9632;
+                    </span>
+                    Zelo gost promet
+                </div>
+
+                <!--
+                <div style="color: #008E30">
+                    &#9632;
+                    Miren promet
+                </div>
+                <div style="color: #F49E00">
+                    &#9632;
+                    Nekaj prometa
+                </div>
+                <div style="color: #E2001A">
+                    &#9632;
+                    Gost promet
+                </div>
+                <div style="color: #9E0F00">
+                    &#9632;
+                    Zelo gost promet
+                </div>
+                -->
+            </div>
+
+            <br><br>
+
+            <button id="weatherBtn">
+                Vreme
+            </button>
+
+            <br>
+
+            <div id="weather">
+                vreme po urah
+            </div>
+
         </div>
 
         <div id="map"></div>
@@ -43,7 +124,7 @@
 
         <div id="loadingOverlay">
             <div id="loadingText">
-                Loading traffic data...
+                Nalaganje prometnih podatkov
             </div>
         </div>
     </body>
