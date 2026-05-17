@@ -2,7 +2,7 @@ Tule se nahaja nekaj Python skript, povezanih s pridobivanjem, manipulacijo in p
 
 
 Pomembne skripte:
-- dars_scraper - pridobi dve vektorski ploščici (angl. vector tile) za zajem podatkov o gostoti prometa na območju Ljubljane (11/1106/727 in 11/1106/728, format z/x/y)
+- dars_scraper - pridobi dve vektorski ploščici (angl. vector tile) za zajem podatkov o gostoti prometa na območju Ljubljane (11/1106/727 in 11/1106/728, format z/x/y) z [DARSove spletne strani](https://www.promet.si/sl/stevci-prometa)
 - export_data - pripravi datoteke, potrebne za delovanje spletne aplikacije (Parquet datoteke pretvori v JSON datoteke po urah)
 
 
