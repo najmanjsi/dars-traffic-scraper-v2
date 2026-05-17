@@ -6,7 +6,7 @@ Pomembne skripte:
 - export_data - pripravi datoteke, potrebne za delovanje spletne aplikacije (Parquet datoteke pretvori v JSON datoteke po urah)
 
 
-Spletna aplikacija se nahaja v mapi web, omogoča animiran prikaz gostote prometa v Ljubljani za izbran datum (od 17.4.2026 naprej) z izbiro hitrosti predvajanja (1x/2x/4x/10x), načina prikaza (kategorično - 4 kategorije (barve zelena-oranžna-rdeča-temno rdeča), kakor jih ima tudi DARS, ali interpolirano - po teh štirih kategorijah) in pa opcijo prikaza vremena po urah (podatki z [Open-Meteo](https://open-meteo.com/) ali <a href="https://open-meteo.com/" target="_blank">Open-Meteo</a>, saj sem na ARSOtu našel arhivske podatke le po dnevih).
+Spletna aplikacija se nahaja v mapi web, omogoča animiran prikaz gostote prometa v Ljubljani za izbran datum (od 17.4.2026 naprej) z izbiro hitrosti predvajanja (1x/2x/4x/10x), načina prikaza (kategorično - 4 kategorije (barve zelena-oranžna-rdeča-temno rdeča), kakor jih ima tudi DARS, ali interpolirano - po teh štirih kategorijah) in pa opcijo prikaza vremena po urah (podatki z [Open-Meteo](https://open-meteo.com/) ali <a href="https://open-meteo.com/" target="blank">Open-Meteo</a>, saj sem na ARSOtu našel arhivske podatke le po dnevih).
 
 IMPORTANT NOTE: Aplikacija seveda ne deluje brez prometnih datotek, ki pa jih tu ni (zaradi velikosti). V bližnji prihodnosti moram dodati še link do tega. Sta pa v mapi traffic/example/ ena Parquet datoteka za cel dan (1.5.2026) in pa ena CSV datoteka taistega dne, a le za enourni interval (od 8:00 do 9:00).
 
