@@ -1,8 +1,8 @@
-Tule se nahaja nekaj Python skript, povezanih s pridobivanjem, manipulacijo in prikazom podatkov, pridobljenih s spletne strani promet.si, s katero upravlja državno podjetje DARS.
+Tule se nahaja koda za spletno aplikacijo in pa nekaj Python skript, povezanih s pridobivanjem, manipulacijo in prikazom podatkov, pridobljenih s spletne strani [promet.si](https://www.promet.si/sl/stevci-prometa), s katero upravlja državno podjetje DARS.
 
 
 Pomembne skripte:
-- dars_scraper - pridobi dve vektorski ploščici (angl. vector tile) za zajem podatkov o gostoti prometa na območju Ljubljane (11/1106/727 in 11/1106/728, format z/x/y) z [DARSove spletne strani](https://www.promet.si/sl/stevci-prometa)
+- dars_scraper - pridobi dve vektorski ploščici (angl. vector tile) za zajem podatkov o gostoti prometa na območju Ljubljane (11/1106/727 in 11/1106/728, format z/x/y)
 - export_data - pripravi datoteke, potrebne za delovanje spletne aplikacije (Parquet datoteke pretvori v JSON datoteke po urah)
 
 
