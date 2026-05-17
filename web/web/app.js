@@ -92,27 +92,35 @@ const weatherBtn = document.getElementById('weatherBtn');
 const weather = document.getElementById('weather');
 weather.style.display = 'none';
 
+const wthrIcon = document.getElementById('wthrIcon');
+const prcpttn = document.getElementById('prcpttn');
+const tmprtr = document.getElementById('tmprtr');
+
 //console.log(weatherData.hourly);
 
 function weatherIcon(code) {
 
-    if (code === 0) return '☀';
+    if (code === 0) return 'wi-day-sunny'; //'☀';
 
-    if ([1,2,3].includes(code)) return '🌤';
+    if ([1,2,3].includes(code)) return 'wi-day-cloudy'; //'🌤';
 
-    if ([51,53,55].includes(code)) return '🌦';
+    if ([51,53,55].includes(code)) return 'wi-day-rain'; //'🌦';
 
-    if ([61,63,65].includes(code)) return '🌧';
+    if ([61,63,65].includes(code)) return 'wi-rain'; //'🌧';
 
-    if ([71,73,75].includes(code)) return '❄';
+    if ([71,73,75].includes(code)) return 'wi-snow'; //'❄';
 
-    return '☁';
+    return 'wi-cloud'; //'☁';
 }
 
 function updateHourlyWeather(hourIndex) {
-    weather.innerText = `vreme: ${weatherIcon(weatherData.hourly.weathercode[hourIndex])}
-                        padavine: ${weatherData.hourly.precipitation[hourIndex]}mm
-                        temperatura: ${weatherData.hourly.temperature_2m[hourIndex]}°C`;
+    //weather.innerText = `vreme: ${weatherIcon(weatherData.hourly.weathercode[hourIndex])}
+    //                    padavine: ${weatherData.hourly.precipitation[hourIndex]}mm
+    //                    temperatura: ${weatherData.hourly.temperature_2m[hourIndex]}°C`;
+    
+    wthrIcon.className = `wi ${weatherIcon(weatherData.hourly.weathercode[hourIndex])}`;
+    prcpttn.innerText = `padavine: ${weatherData.hourly.precipitation[hourIndex]}mm`;
+    tmprtr.innerText = `temperatura: ${weatherData.hourly.temperature_2m[hourIndex]}°C`;
 }
 
 function generateDateRange(start, end) {
