@@ -42,7 +42,7 @@ let weatherShown = false;
 
 // day selector
 const startDate = "2026-04-17";
-const endDate = "2026-05-14";
+const endDate = "2026-05-18";
 
 // weather data
 async function getWeatherData(date) {
