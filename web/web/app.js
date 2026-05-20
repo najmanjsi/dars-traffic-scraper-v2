@@ -42,7 +42,9 @@ let weatherShown = false;
 
 // day selector
 const startDate = "2026-04-17";
-const endDate = "2026-05-18";
+const endDate = "2026-05-20";
+
+const startHour = "06:00";
 
 // weather data
 async function getWeatherData(date) {
@@ -438,7 +440,7 @@ function renderFrame(frameIndex) {
 
 function redrawCurrentFrame() {
 
-    if (!frames.length) return;
+    if (!trafficFrames.length) return;
 
     renderFrame(currentFrame);
 }
@@ -447,9 +449,16 @@ function redrawCurrentFrame() {
 // PLAYBACK
 // --------------------------------------------------
 
-function play() {
+//const atTheEnd = false;
 
-    stop();
+function play(changeText = true) {
+
+    isPlaying = true;
+
+    if (changeText) {
+        playBtn.innerText = '⏸ Stop';
+    }
+    //stop();
 
     const interval = parseInt(speedSelect.value);
 
@@ -460,18 +469,73 @@ function play() {
         currentFrame++;
 
         if (currentFrame >= trafficFrames.length) {
+            stop();
+            //togglePlayback();
+            //atTheEnd = true;
             currentFrame = 0;
         }
 
     }, interval);
 }
 
-function stop() {
+function stop(changeText = true) {
+
+    isPlaying = false;
+
+    if (changeText) {
+        playBtn.innerText = '▶ Start';
+    }
 
     if (timer) {
         clearInterval(timer);
         timer = null;
     }
+}
+
+function minutesFromTimestamp(timestamp) {
+
+    const date = new Date(timestamp);
+
+    return (
+        date.getHours() * 60 +
+        date.getMinutes()
+    );
+}
+
+function jumpToHour(hour, minute = 0) {
+
+    const targetMinutes =
+        hour * 60 + minute;
+
+    let bestIndex = 0;
+
+    let bestDiff = Infinity;
+
+    for (let i = 0; i < trafficFrames.length; i++) {
+
+        const frameMinutes =
+            minutesFromTimestamp(
+                trafficFrames[i].timestamp
+            );
+        //console.log(frameMinutes);
+
+        const diff =
+            Math.abs(
+                frameMinutes - targetMinutes
+            );
+
+        if (diff < bestDiff) {
+
+            bestDiff = diff;
+
+            bestIndex = i;
+        }
+    }
+
+    currentFrame = bestIndex;
+    //console.log(currentFrame)
+
+    renderFrame(currentFrame);
 }
 
 // --------------------------------------------------
@@ -485,14 +549,14 @@ function stop() {
 //    .onclick = stop;
 
 function togglePlayback() {
-    isPlaying = !isPlaying;
+    //isPlaying = !isPlaying;
 
-    if (isPlaying) {
-        playBtn.innerText = '⏸ Stop';
+    if (!isPlaying) {
+        //playBtn.innerText = '⏸ Stop';
         play();
     }
     else {
-        playBtn.innerText = '▶ Start';
+        //playBtn.innerText = '▶ Start';
         stop();
     }
 }
@@ -534,7 +598,9 @@ daySelect.onchange = async () => {
 
     await loadTrafficDay(daySelect.value);
 
-    renderFrame(0);
+    //renderFrame(0);
+    // instead of rendering the first frame of the day (which is 02:00 or 00:00 UTC), we render at 6 in the morning
+    jumpToHour(6);
 };
 
 colorModeBtn.addEventListener('click', () => {
@@ -570,6 +636,17 @@ function toggleWeather() {
 
 weatherBtn.onclick = toggleWeather;
 
+
+// jump to time
+document.getElementById('jumpBtn').addEventListener('click', () => {
+    //togglePlayback();
+    //stop();
+    const value = document.getElementById('timeInput').value;
+    const [hour, minute] = value.split(':').map(Number);
+    jumpToHour(hour, minute);
+    stop();
+});
+
 // --------------------------------------------------
 // STARTUP
 // --------------------------------------------------
@@ -583,7 +660,8 @@ async function init() {
 
     await loadTrafficDay(lastDay);
 
-    renderFrame(0);
+    //renderFrame(0);
+    jumpToHour(6);
 }
 
 init();
