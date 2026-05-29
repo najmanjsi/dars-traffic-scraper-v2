@@ -41,8 +41,10 @@ let legendShown = false;
 let weatherShown = false;
 
 // day selector
-const startDate = "2026-04-17";
-const endDate = "2026-05-20";
+//const startDate = "2026-04-17";
+//const endDate = "2026-05-20";
+const response = await fetch('/data/data/traffic/index.json');
+const availableDays = await response.json();
 
 const startHour = "06:00";
 
@@ -167,7 +169,7 @@ function generateDateRangeToToday(start) {
     return dates;
 }
 
-const availableDays = generateDateRange(startDate, endDate);
+//const availableDays = generateDateRange(startDate, endDate);
 //console.log(availableDays)
 
 const daySelect = document.getElementById('daySelect');
@@ -285,6 +287,28 @@ async function loadGeometry() {
             weight: 3,
             opacity: 0.8
         }).addTo(map);
+        
+        /*
+        const decorator = L.polylineDecorator(polyline, {
+
+            patterns: [
+                {
+                    offset: '50%',
+                    repeat: 0,
+                    symbol: L.Symbol.arrowHead({
+
+                        pixelSize: 8,
+                        polygon: true,
+                        pathOptions: {
+                            color: 'gray',
+                            fillOpacity: 1,
+                            weight: 1
+                        }
+                    })
+                }
+            ]
+        }).addTo(map);
+        */
 
         segmentLayers[segmentId] = polyline;
     }
@@ -452,6 +476,8 @@ function redrawCurrentFrame() {
 //const atTheEnd = false;
 
 function play(changeText = true) {
+
+    stop();
 
     isPlaying = true;
 

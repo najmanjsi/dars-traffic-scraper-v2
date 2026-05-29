@@ -23,13 +23,15 @@ else:
     day_file = today.strftime('%Y-%m-%d.parquet')
 
 SEGMENTS_FILE = BASE / 'data' / 'data' / 'segments.parquet'
-TRAFFIC_FILE = BASE / 'data' / 'data' / 'traffic' / day_file
+TRAFFIC_DIR = BASE / 'data' / 'data' / 'traffic'
+TRAFFIC_FILE = TRAFFIC_DIR / day_file
 
 OUTPUT_DIR = BASE / 'web' / 'exported'
-OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
 FRAMES_DIR = OUTPUT_DIR / 'frames'
-FRAMES_DIR.mkdir(exist_ok=True)
+
+def makedirs():
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    FRAMES_DIR.mkdir(exist_ok=True)
 
 
 # export geometry
@@ -112,7 +114,17 @@ def export_traffic():
     print('Saved traffic.json')
 
 
+def update_dateindex():
+    dates = sorted([file.stem for file in TRAFFIC_DIR.glob('*.parquet')])
+
+    with open(TRAFFIC_DIR / 'index.json', 'w') as f:
+        json.dump(dates, f)
+
+
+#makedirs()
 #export_geometry() # uncomment if you need to export again, otherwise leave commented
 #export_traffic() # uncomment for exporting traffic - IMPORTANT: very RAM heavy! (it kills the process on the 1GB RAM linux server)
+
+update_dateindex()
 
 print('Done')
